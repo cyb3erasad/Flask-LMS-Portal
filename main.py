@@ -21,8 +21,8 @@ def load_user(user_id):
     user = Teacher.query.get(int(user_id))
     if user:
         return user
-    else:
-        return Student.query.get(int(user_id))
+    
+    return Student.query.get(int(user_id))
 
 @app.route("/")
 def home():
@@ -62,7 +62,7 @@ def teacher_login():
         password = request.form["password"] 
 
         teacher = Teacher.query.filter_by(username=username).first()
-        if teacher and check_password_hash(teacher.password, password):
+        if teacher and teacher.check_password(password):
             login_user(teacher)
             return redirect(url_for("teacher_dashboard"))
         flash("Invalid credentials!", "danger")
