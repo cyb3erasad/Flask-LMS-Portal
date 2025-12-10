@@ -1,30 +1,30 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Add Marks{% endblock %}
 {% block content %}
-
-<div class="max-w-lg mx-auto bg-white p-6 shadow rounded">
-    <h2 class="text-2xl font-bold mb-4">Add Marks</h2>
-
+<div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Add Marks</h2>
     <form method="POST">
-
-        <label class="font-semibold">Select Student</label>
-        <select name="student_id" class="w-full border px-3 py-2 rounded mb-3">
+        <label class="block text-sm font-medium text-slate-700">Student</label>
+        <select name="student_id" class="w-full mt-1 mb-3 p-2 border rounded-md" required>
             {% for s in students %}
             <option value="{{ s.id }}">{{ s.name }} ({{ s.student_id }})</option>
             {% endfor %}
         </select>
 
-        <label class="font-semibold">Select Subject</label>
-        <select name="subject_id" class="w-full border px-3 py-2 rounded mb-3">
+
+        <label class="block text-sm font-medium text-slate-700">Subject</label>
+        <select name="subject_id" class="w-full mt-1 mb-3 p-2 border rounded-md" required>
             {% for sub in subjects %}
             <option value="{{ sub.id }}">{{ sub.name }}</option>
             {% endfor %}
         </select>
 
-        <input type="number" name="marks" placeholder="Enter Marks" class="w-full px-3 py-2 border rounded mb-3"
-            required>
 
-        <button class="bg-green-600 text-white w-full py-2 rounded">Submit</button>
+        <label class="block text-sm font-medium text-slate-700">Marks</label>
+        <input name="marks" type="number" min="0" max="100" class="w-full mt-1 mb-4 p-2 border rounded-md" required />
+
+
+        <button class="w-full bg-green-600 text-white py-2 rounded-md">Save</button>
     </form>
 </div>
-
 {% endblock %}

@@ -6,8 +6,15 @@ db = SQLAlchemy()
 
 class Teacher(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+
+    students = db.relationship('Student', backref='teacher', lazy=True)
+    subjects = db.relationship('Subject', backref='teacher', lazy=True)
+    marks = db.relationship('Marks', backref='teacher', lazy=True)
+
+    def get_id(self):
+        return f'teacher_{self.id}'
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -17,10 +24,16 @@ class Teacher(db.Model, UserMixin):
 
 class Student(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.String(20), unique=True, nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    student_id = db.Column(db.String(50), unique=True, nullable=False)
+    name = db.Column(db.String(150), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
 
+    marks_list = db.relationship('Marks', backref='student', lazy=True)
+
+    def get_id(self):
+        return f'student_{self.id}'
+    
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
@@ -30,13 +43,15 @@ class Student(db.Model, UserMixin):
 
 class Subject(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)    
+    name = db.Column(db.String(150), nullable=False)   
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)
+
+    marks = db.relationship('Marks', backref='subject', lazy=True)
+ 
 
 class Marks(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))    
-    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
-    marks = db.Column(db.Float)
-
-    student = db.relationship('Student', backref='marks_list')  
-    subject = db.relationship('Subject')  
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'), nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
+    marks = db.Column(db.Float, nullable=False)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'), nullable=False)

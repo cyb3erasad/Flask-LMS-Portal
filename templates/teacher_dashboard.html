@@ -1,26 +1,55 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Teacher Dashboard{% endblock %}
 {% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="md:col-span-2 bg-white rounded-lg shadow p-6">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Students</h2>
+            <div class="flex gap-2">
+                <a href="{{ url_for('add_student') }}" class="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">Add
+                    Student</a>
+                <a href="{{ url_for('add_subject') }}" class="px-3 py-1 bg-purple-600 text-white rounded-md text-sm">Add
+                    Subject</a>
+                <a href="{{ url_for('add_marks') }}" class="px-3 py-1 bg-green-600 text-white rounded-md text-sm">Add
+                    Marks</a>
+            </div>
+        </div>
 
-<h2 class="text-3xl font-bold mb-6">Teacher Dashboard</h2>
 
-<div class="flex space-x-4 mb-6">
-    <a href="/add_student" class="bg-blue-600 text-white px-4 py-2 rounded">Add Student</a>
-    <a href="/add_subject" class="bg-purple-600 text-white px-4 py-2 rounded">Add Subject</a>
-    <a href="/add_marks" class="bg-green-600 text-white px-4 py-2 rounded">Add Marks</a>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th class="p-3 border-b">Name</th>
+                        <th class="p-3 border-b">Student ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for s in students %}
+                    <tr class="odd:bg-white even:bg-slate-50">
+                        <td class="p-3 border-b">{{ s.name }}</td>
+                        <td class="p-3 border-b">{{ s.student_id }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="2" class="p-3">No students yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <aside class="bg-white rounded-lg shadow p-6">
+        <h3 class="font-semibold mb-3">Subjects</h3>
+        <ul class="space-y-2">
+            {% for sub in subjects %}
+            <li class="text-sm px-3 py-2 bg-slate-50 rounded">{{ sub.name }}</li>
+            {% else %}
+            <li class="text-sm text-slate-500">No subjects yet.</li>
+            {% endfor %}
+        </ul>
+    </aside>
 </div>
-
-<h3 class="text-xl font-semibold mb-2">Students</h3>
-<ul class="bg-white shadow rounded p-4">
-    {% for s in students %}
-    <li class="border-b py-2">{{ s.name }} – <span class="text-gray-500">{{ s.student_id }}</span></li>
-    {% endfor %}
-</ul>
-
-<h3 class="text-xl font-semibold mt-6 mb-2">Subjects</h3>
-<ul class="bg-white shadow rounded p-4">
-    {% for sub in subjects %}
-    <li class="border-b py-2">{{ sub.name }}</li>
-    {% endfor %}
-</ul>
-
 {% endblock %}

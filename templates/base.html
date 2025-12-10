@@ -1,30 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>{{ title if title else "LMS Portal" }}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}LMS Portal{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-slate-50 min-h-screen leading-relaxed text-slate-800">
 
-    <!-- Navbar -->
-    <nav class="bg-blue-600 text-white px-6 py-4 flex justify-between">
-        <h1 class="text-xl font-semibold">LMS Portal</h1>
 
-        <div>
-            <a href="/" class="mx-2 hover:underline">Home</a>
+    <!-- NAVBAR -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="{{ url_for('home') }}" class="text-xl font-semibold text-slate-900">LMS Portal</a>
 
-            {% if current_user.is_authenticated %}
-            <a href="/logout" class="ml-4 bg-red-500 px-3 py-1 rounded">Logout</a>
-            {% endif %}
+
+                <nav class="flex items-center gap-3">
+                    {% if current_user.is_authenticated %}
+                    <span class="hidden sm:inline-block text-sm text-slate-600">Logged in as {{ current_user.username if
+                        current_user.__class__.__name__ == 'Teacher' else current_user.name }}</span>
+                    <a href="{{ url_for('logout') }}"
+                        class="inline-flex items-center px-3 py-1.5 bg-red-500 text-white rounded-md text-sm">Logout</a>
+                    {% else %}
+                    <a href="{{ url_for('teacher_login') }}"
+                        class="inline-flex items-center px-3 py-1.5 bg-blue-600 text-white rounded-md text-sm">Teacher</a>
+                    <a href="{{ url_for('student_login') }}"
+                        class="inline-flex items-center px-3 py-1.5 bg-emerald-600 text-white rounded-md text-sm">Student</a>
+                    {% endif %}
+                </nav>
+            </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Page Content -->
-    <div class="container mx-auto mt-10 px-4">
-        {% block content %}{% endblock %}
+
+    <!-- FLASH MESSAGES -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="space-y-2">
+            {% for category, message in messages %}
+            <div class="p-3 rounded-md text-sm" {% if category=='success'
+                %}class="bg-green-50 border border-green-200 text-green-800 p-3 rounded-md" {% endif %} {% if
+                category=='danger' %}class="bg-red-50 border border-red-200 text-red-800 p-3 rounded-md" {% endif %} {%
+                if category=='info' %}class="bg-blue-50 border border-blue-200 text-blue-800 p-3 rounded-md" {% endif
+                %}>
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
     </div>
+
+
+    <!-- PAGE CONTENT -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 mb-12">
+        {% block content %}{% endblock %}
+    </main>
+
 
 </body>
 

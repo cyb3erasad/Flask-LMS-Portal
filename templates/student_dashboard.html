@@ -1,23 +1,21 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
 {% block content %}
+<div class="bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Your Results</h2>
 
-<h2 class="text-3xl font-bold mb-6">Student Dashboard</h2>
-
-<div class="bg-white shadow rounded p-4">
-    <h3 class="text-xl font-semibold mb-4">Your Marks</h3>
 
     {% if marks %}
-    <ul>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {% for m in marks %}
-        <li class="py-2 border-b">
-            {{ m.subject.name }}:
-            <span class="font-semibold">{{ m.marks }}</span>
-        </li>
+        <div class="p-3 bg-slate-50 rounded">
+            <div class="font-medium">{{ m.subject.name }}</div>
+            <div class="text-sm text-slate-600">Marks: <span class="font-semibold">{{ m.marks }}</span></div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
     {% else %}
-    <p>No marks uploaded yet.</p>
+    <p class="text-slate-600">No marks uploaded yet.</p>
     {% endif %}
 </div>
-
 {% endblock %}

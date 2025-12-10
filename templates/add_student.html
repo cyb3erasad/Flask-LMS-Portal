@@ -1,20 +1,22 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% block title %}Add Student{% endblock %}
 {% block content %}
-
-<div class="max-w-lg mx-auto bg-white p-6 shadow rounded">
-    <h2 class="text-2xl font-bold mb-4">Add Student</h2>
-
+<div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
+    <h2 class="text-xl font-semibold mb-4">Add Student</h2>
     <form method="POST">
-        <input type="text" name="name" placeholder="Student Name" class="w-full px-3 py-2 border rounded mb-3" required>
+        <label class="block text-sm font-medium text-slate-700">Full Name</label>
+        <input name="name" class="w-full mt-1 mb-3 p-2 border rounded-md" required />
 
-        <input type="text" name="student_id" placeholder="Student ID" class="w-full px-3 py-2 border rounded mb-3"
-            required>
 
-        <input type="password" name="password" placeholder="Password" class="w-full px-3 py-2 border rounded mb-3"
-            required>
+        <label class="block text-sm font-medium text-slate-700">Student ID</label>
+        <input name="student_id" class="w-full mt-1 mb-3 p-2 border rounded-md" required />
 
-        <button class="bg-blue-600 text-white w-full py-2 rounded">Add Student</button>
+
+        <label class="block text-sm font-medium text-slate-700">Password</label>
+        <input name="password" type="password" class="w-full mt-1 mb-4 p-2 border rounded-md" required />
+
+
+        <button class="w-full bg-blue-600 text-white py-2 rounded-md">Add Student</button>
     </form>
 </div>
-
 {% endblock %}
