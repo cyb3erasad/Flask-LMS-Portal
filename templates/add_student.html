@@ -3,9 +3,15 @@
 {% block content %}
 <div class="max-w-md mx-auto bg-white rounded-lg shadow p-6">
     <h2 class="text-xl font-semibold mb-4">Add Student</h2>
+
+    <p class="text-sm text-slate-600 bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
+        <strong>Note:</strong> If the student already exists in the system, just enter their Student ID.
+        You can leave the name and password fields empty for existing students.
+    </p>
+
     <form method="POST">
         <label class="block text-sm font-medium text-slate-700">Full Name</label>
-        <input name="name" class="w-full mt-1 mb-3 p-2 border rounded-md" required />
+        <input name="name" class="w-full mt-1 mb-3 p-2 border rounded-md" />
 
 
         <label class="block text-sm font-medium text-slate-700">Student ID</label>
@@ -13,7 +19,7 @@
 
 
         <label class="block text-sm font-medium text-slate-700">Password</label>
-        <input name="password" type="password" class="w-full mt-1 mb-4 p-2 border rounded-md" required />
+        <input name="password" type="password" class="w-full mt-1 mb-4 p-2 border rounded-md" />
 
 
         <button class="w-full bg-blue-600 text-white py-2 rounded-md">Add Student</button>

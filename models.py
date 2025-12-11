@@ -4,12 +4,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
+# Association table for many-to-many relationship
+teacher_student = db.Table('teacher_student',
+    db.Column('teacher_id', db.Integer, db.ForeignKey('teacher.id'), primary_key=True),
+    db.Column('student_id', db.Integer, db.ForeignKey('student.id'), primary_key=True)
+)
+
 class Teacher(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
 
-    students = db.relationship('Student', backref='teacher', lazy=True)
+    students = db.relationship('Student',secondary=teacher_student, backref='teacher', lazy=True)
     subjects = db.relationship('Subject', backref='teacher', lazy=True)
     marks = db.relationship('Marks', backref='teacher', lazy=True)
 
@@ -27,7 +33,6 @@ class Student(db.Model, UserMixin):
     student_id = db.Column(db.String(50), unique=True, nullable=False)
     name = db.Column(db.String(150), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
 
     marks_list = db.relationship('Marks', backref='student', lazy=True)
 

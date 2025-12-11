@@ -89,7 +89,7 @@ def teacher_dashboard():
     if not isinstance(current_user, Teacher):
         return "Unauthorized", 403
     
-    students = Student.query.filter_by(teacher_id=current_user.id).all()
+    students = current_user.students
     subjects = Subject.query.filter_by(teacher_id=current_user.id).all()
     return render_template("teacher_dashboard.html", students=students, subjects=subjects)
 
@@ -112,23 +112,33 @@ def add_student():
         student_id = request.form["student_id"].strip()
         password = request.form["password"]
 
-        if not name or not student_id or not password:
-            flash("All fields are required.", "danger")
+        if not student_id:
+            flash("Student ID is required.", "danger")
             return redirect("/add_student")
         
         exists = Student.query.filter_by(student_id=student_id).first()
         if exists:
-            flash("Student ID already exists!", "danger")
-            return redirect("/add_student")
-
-        new_student = Student(name=name, student_id=student_id, teacher_id=current_user.id)
-        new_student.set_password(password)
-
-        db.session.add(new_student)
-        db.session.commit()
-        flash("Student add successfully!", "success")
-        return redirect("/teacher/dashboard")
-    return render_template("add_student.html")
+            if exists in current_user.students:
+                flash("This student is already added to your account!", "danger")
+                return redirect("/add_student")
+            else:
+                current_user.students.append(exists)
+                db.session.commit()
+                flash(f"Student {exists.name} added to your account!", "success")
+                return redirect("/teacher/dashboard")
+        else:
+            if not name or not password:
+                flash("Name and password are required for new students.", "danger")
+                return redirect("/add_student")
+            new_student = Student(name=name, student_id=student_id)
+            new_student.set_password(password)
+            current_user.students.append(new_student)
+            db.session.add(new_student)
+            db.session.commit()
+            flash("New student created and added successfully!", "success")
+            return redirect("/teacher/dashboard")
+            
+    return render_template("add_student.html")    
 
 @app.route("/add_subject", methods=["GET", "POST"])
 @login_required
@@ -159,7 +169,7 @@ def add_marks():
         if not isinstance(current_user, Teacher):
             return "Unauthorized", 403
         
-        students = Student.query.filter_by(teacher_id=current_user.id).all()
+        students = current_user.students
         subjects = Subject.query.filter_by(teacher_id=current_user.id).all()
 
         if request.method == "POST":
@@ -170,17 +180,21 @@ def add_marks():
             except(ValueError, KeyError):
                 flash("Invalid Input", "danger")
                 return redirect("/add_marks")
-
-            student = Student.query.filter_by(id=student_id, teacher_id=current_user.id).first()
+            
+            student = Student.query.get(student_id)
+            if not student or student not in current_user.students:
+                    flash("Selected student is not in your account.", "danger")
+                    return redirect("/add_marks")
+        
             subject = Subject.query.filter_by(id=subject_id, teacher_id=current_user.id).first()
-            if not student or not subject:
-                flash("Selected student or subject is invalid.", "danger")
-                return redirect("/add_marks") 
+            if not subject:
+                flash("Selected subject is invalid.", "danger")
+                return redirect("/add_marks")
 
             records = Marks(student_id=student_id,
-                        subject_id=subject_id,
-                        marks=marks,
-                        teacher_id=current_user.id)
+                    subject_id=subject_id,
+                    marks=marks,
+                    teacher_id=current_user.id)
             db.session.add(records)
             db.session.commit()
             flash("Marks added!", "success")
