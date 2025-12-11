@@ -2,13 +2,17 @@ from flask import Flask, render_template, redirect, request, url_for, flash
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from werkzeug.security import check_password_hash
 from models import db, Teacher, Student, Subject, Marks
+import os
+from dotenv import load_dotenv
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "523764902234"
+load_dotenv()
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default_secret_key")
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lms.db'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['TEACHER_SECRET'] = '6543210987'
+app.config["TEACHER_SECRET"] = os.getenv("TEACHER_SECRET", "default_teacher_secret")
 
 db.init_app(app)
 
