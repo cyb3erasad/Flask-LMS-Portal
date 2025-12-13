@@ -1,3 +1,6 @@
 llm/
 instance/
+lms.db
 .env
+__pycache__/
+*.pyc

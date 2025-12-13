@@ -4,15 +4,17 @@ from werkzeug.security import check_password_hash
 from models import db, Teacher, Student, Subject, Marks
 import os
 from dotenv import load_dotenv
+import pymysql
 
 app = Flask(__name__)
 
 load_dotenv()
+pymysql.install_as_MySQLdb()
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default_secret_key")
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lms.db'
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config["TEACHER_SECRET"] = os.getenv("TEACHER_SECRET", "default_teacher_secret")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
 
@@ -216,4 +218,4 @@ def logout():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run()
