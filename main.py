@@ -12,7 +12,7 @@ load_dotenv()
 pymysql.install_as_MySQLdb()
 
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default_secret_key")
-app.config['SQLALCHEMY_DATABASE_URL'] = os.environ.get('MYSQL_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('MYSQL_URL')
 app.config["TEACHER_SECRET"] = os.getenv("TEACHER_SECRET", "default_teacher_secret")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
