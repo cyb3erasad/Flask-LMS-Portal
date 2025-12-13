@@ -3,7 +3,6 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from werkzeug.security import check_password_hash
 from models import db, Teacher, Student, Subject, Marks
 import os
-from dotenv import load_dotenv
 import pymysql
 
 app = Flask(__name__)
