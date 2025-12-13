@@ -3,33 +3,17 @@ from flask_login import LoginManager, login_user, login_required, current_user, 
 from werkzeug.security import check_password_hash
 from models import db, Teacher, Student, Subject, Marks
 import os
+from dotenv import load_dotenv
+import pymysql
 
 app = Flask(__name__)
 
+pymysql.install_as_MySQLdb()
+
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "default_secret_key")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('MYSQL_URL')
 app.config["TEACHER_SECRET"] = os.getenv("TEACHER_SECRET", "default_teacher_secret")
-
-# Database configuration - handle both local and Railway
-DATABASE_URL = os.environ.get("DATABASE_URL") or os.environ.get("MYSQL_URL")
-
-if DATABASE_URL:
-    # Railway MySQL - convert mysql:// to mysql+pymysql://
-    if DATABASE_URL.startswith("mysql://"):
-        DATABASE_URL = DATABASE_URL.replace("mysql://", "mysql+pymysql://")
-    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
-else:
-    # Local SQLite for development
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lms.db'
-
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db.init_app(app)
-
-login_manager = LoginManager()
-login_manager.login_view = 'teacher_login'
-login_manager.init_app(app)
-
-# ... rest of your code stays the same
 
 db.init_app(app)
 
@@ -231,6 +215,4 @@ def logout():
 
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run()
