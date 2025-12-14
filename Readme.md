@@ -118,17 +118,14 @@ python main.py
 ## Screenshots
 
 ### Teacher Dashboard
-*Add your teacher dashboard screenshot here*
 
 ![Teacher Dashboard](screenshots/teacher_dashboard.jpeg)
 
 ### Student Dashboard
-*Add your student dashboard screenshot here*
 
 ![Student Dashboard](screenshots/student_dashboard.jpeg)
 
 ### Login Pages
-*Add your login page screenshots here*
 
 ![Login Pages](screenshots/student_login.jpeg)
 
