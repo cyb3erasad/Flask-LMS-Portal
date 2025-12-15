@@ -140,9 +140,6 @@ The application is configured for deployment on Vercel (see `vercel.json`) and u
 - Session-based authentication with Flask-Login
 - Protected routes requiring authentication
 
-## License
-
-*Add your license information here*
 
 ## Author
 
